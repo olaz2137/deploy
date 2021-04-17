@@ -24,6 +24,6 @@ def counter():
 def hello_name_view(name: str):
     return HelloResp(msg=f"Hello {name}")
 
-@app.get("/method")
-def method():
+#@app.get("/method")
+#def method():
     
