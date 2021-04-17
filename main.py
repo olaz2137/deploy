@@ -28,7 +28,7 @@ def hello_name_view(name: str):
 def get():
     return {"method": "GET"}
 
-@app.post("/method")
+@app.post("/method",status_code=201)
 def post():
     return {"method": "POST"}
 
