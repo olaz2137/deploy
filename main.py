@@ -40,7 +40,7 @@ def delete():
 def put():
     return {"method": "PUT"}
 
-@app.get("/method")
+@app.options("/method")
 def options():
     return {"method": "OPTIONS"}
 
