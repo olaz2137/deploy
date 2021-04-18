@@ -46,7 +46,7 @@ def put():
 def options():
     return {"method": "OPTIONS"}
 
-@app.get("/auth?{password}&{password_hash}")
+@app.get("/auth")
 def auth(password: str, password_hash: str):
     return item
     
