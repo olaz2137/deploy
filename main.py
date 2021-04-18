@@ -1,5 +1,4 @@
-from fastapi import FastAPI, status
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, Request, Response, status
 from pydantic import BaseModel
 import hashlib
 
@@ -49,9 +48,7 @@ def options():
 
 @app.get("/auth?{password}&{password_hash}")
 def auth(password: str, password_hash: str):
-    if password_hash != hashlib.sha512(password):
-         return JSONResponse(status_code=status.HTTP_201_CREATED, content=item)
-    return JSONResponse(status_code=status.HTTP_201_CREATED, content=item)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
     
 
     
