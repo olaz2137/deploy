@@ -48,9 +48,9 @@ def options():
 @app.get("/auth")
 def auth(password: str, password_hash: str):
     if password_hash != hashlib.sha512(password):
-         return response.status_code == 401
+         return response.status_code = 401
     
-    return response.status_code == 204
+    return response.status_code = 204
     
 
     
