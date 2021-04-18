@@ -48,7 +48,8 @@ def options():
 
 @app.get("/auth")
 def auth(password: str, password_hash: str):
-   if password_hash != hashlib.sha512(password).hexdigest():
+    a = hashlib.sha512(password)
+   if password_hash != a.hexdigest():
        return Response(status_code=status.HTTP_401_UNAUTHORIZED)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
     
