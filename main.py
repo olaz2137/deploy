@@ -46,9 +46,9 @@ def options():
     return {"method": "OPTIONS"}
 
 @app.get("/auth",status_code=204)
-def auth(password: str, password_hash: str):
+def auth(password: str, password_hash: str,response: Response):
     if password_hash != hashlib.sha512(password):
-         status_code=401
+         response.status_code = status.HTTP_401_UNAUTHORIZED
     
 
     
