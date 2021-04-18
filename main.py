@@ -48,9 +48,9 @@ def options():
 @app.get("/auth")
 def auth(password: str, password_hash: str):
     if password_hash != hashlib.sha512(password):
-         return JSONResponse(status_code=status.HTTP_401_CREATED)
+         return JSONResponse(status_code=status.HTTP_401_UNAUTHORIZED)
     
-    return JSONResponse(status_code=status.HTTP_204_CREATED)
+    return JSONResponse(status_code=status.HTTP_204_NO_CONTENT)
     
 
     
