@@ -46,8 +46,8 @@ def put():
 def options():
     return {"method": "OPTIONS"}
 
-@app.get("/auth",status_code=401)
-def auth(password: str, password_hash: str):
+@app.get("/auth")
+def auth(password="", password_hash=""):
     m = hashlib.sha512(password.encode("utf8")).hexdigest()
 
     if password_hash != m or password == "" or password_hash == "":
