@@ -50,7 +50,7 @@ def options():
 def auth(password: str, password_hash: str):
     m = hashlib.sha512(password.encode("utf8")).hexdigest()
 
-    if password_hash != m:
+    if password_hash != m or password == "" or password_hash == "":
         return Response(status_code=status.HTTP_401_UNAUTHORIZED)
     
     return Response(status_code=status.HTTP_204_NO_CONTENT)
