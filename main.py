@@ -49,6 +49,7 @@ def options():
 def auth(password: str, password_hash: str,response: Response):
     if password_hash != hashlib.sha512(password):
          response.status_code = status.HTTP_201_CREATED
+         return response
     
 
     
