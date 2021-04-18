@@ -48,7 +48,7 @@ def options():
 
 @app.get("/auth?{password}&{password_hash}")
 def auth(password: str, password_hash: str):
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+    return item
     
 
     
