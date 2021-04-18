@@ -9,6 +9,7 @@ app.counter = 0
 class HelloResp(BaseModel):
     msg: str
 
+item = {"message": "Hello world!"}
 
 @app.get("/")
 def root():
@@ -48,8 +49,8 @@ def options():
 @app.get("/auth?{password}&{password_hash}")
 def auth(password: str, password_hash: str):
     if password_hash != hashlib.sha512(password):
-         return Response(status_code=HTTP_401_UNAUTHORIZED)
-    return Response(status_code=HTTP_204_NO_CONTENT)
+         return JSONResponse(status_code=status.HTTP_201_CREATED, content=item)
+    return JSONResponse(status_code=status.HTTP_201_CREATED, content=item)
     
 
     
