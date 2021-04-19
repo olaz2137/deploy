@@ -2,10 +2,10 @@ from fastapi import FastAPI, Request, Response, status
 from pydantic import BaseModel
 import hashlib
 from fastapi.encoders import jsonable_encoder
+from datetime import datetime, time, timedelta
+from typing import Optional
 
 app = FastAPI()
-app.counter = 0
-
 
 class HelloResp(BaseModel):
     msg: str
@@ -14,6 +14,9 @@ class Patient(BaseModel):
     name: str
     surname: str
 
+app.counter = 0
+app.storage: Dict[int, Patient,datetime.date,datetime.date] = {}
+    
 item = {"message": "Hello world!"}
 
 @app.get("/")
@@ -21,10 +24,10 @@ def root():
     return {"message": "Hello world!"}
 
 
-@app.get("/counter")
-def counter():
-    app.counter += 1
-    return app.counter
+#@app.get("/counter")
+#def counter():
+#    app.counter += 1
+#    return app.counter
 
 
 @app.get("/hello/{name}", response_model=HelloResp)
@@ -34,10 +37,6 @@ def hello_name_view(name: str):
 @app.get("/method")
 def get():
     return {"method": "GET"}
-
-@app.post("/register")
-def register_patient(patient:Patient):
-    
 
 @app.post("/method",status_code=201)
 def post():
@@ -63,6 +62,15 @@ def auth(password="", password_hash=""):
         return Response(status_code=status.HTTP_401_UNAUTHORIZED)
     
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@app.post("/register",status_code=201)
+def register_patient(patient:Patient):
+    result = {"id": app.counter, patient, "register_date" : date.today().date, "vaccination_date" : date.today().date + timedelta(len(patient.name)+len(patient.surname))}
+    app.storage[app.counter] = patient
+    app.counter += 1
+    return result
+    
     
 
     
