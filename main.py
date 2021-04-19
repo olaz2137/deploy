@@ -77,7 +77,7 @@ def register_patient(patient: Patient):
 def show_patient(id: int):
     if id in app.storage:
         if id<0:
-            return Response(status_code=status.HTTP_404_BAD_REQUEST)    
+            return Response(status_code=status.HTTP_400_BAD_REQUEST)    
         return app.storage.get(id)
     return Response(status_code=status.HTTP_404_NOT_FOUND)    
 
