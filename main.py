@@ -66,7 +66,7 @@ def auth(password="", password_hash=""):
 
 @app.post("/register",status_code=201)
 def register_patient(patient:Patient):
-    result = {"id": app.counter, patient, "register_date" : str(date.today()), "vaccination_date" : str(date.today() + timedelta(len(patient.name)+len(patient.surname)))}
+    result = {"id": app.counter, "name":patient.name,"surname":patient.surname, "register_date" : str(date.today()), "vaccination_date" : str(date.today() + timedelta(len(patient.name)+len(patient.surname)))}
     app.storage[app.counter] = patient
     app.counter += 1
     return result
