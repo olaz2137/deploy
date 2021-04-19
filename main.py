@@ -15,7 +15,7 @@ class Patient(BaseModel):
     name: str
     surname: str
 
-app.counter: int = 0
+app.counter: int = 1
 app.storage: Dict[int, Patient] = {}
     
 item = {"message": "Hello world!"}
@@ -68,7 +68,7 @@ def auth(password="", password_hash=""):
 @app.post("/register", status_code=201)
 def register_patient(patient: Patient):
     result = {"id": app.counter, "name": patient.name, "surname": patient.surname, "register_date": str(date.today()),
-              "vaccination_date": str(date.today() + timedelta(len(patient.name) + len(patient.surname)))}
+              "vaccination_date": str(date.today() + timedelta(len(''.join(filter(str.isalpha, patient.name))) + len(''.join(filter(str.isalpha, patient.surname)))))}
     app.storage[app.counter] = patient
     app.counter += 1
     return result
