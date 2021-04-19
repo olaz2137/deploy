@@ -73,6 +73,12 @@ def register_patient(patient: Patient):
     app.counter += 1
     return result
     
-    
+@app.get("/patient/{id}")
+def show_patient(id: int):
+    if id in app.storage:
+        if id<0:
+            return Response(status_code=status.HTTP_404_BAD_REQUEST)    
+        return app.storage.get(id)
+    return Response(status_code=status.HTTP_404_NOT_FOUND)    
 
     
