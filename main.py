@@ -16,7 +16,7 @@ class Patient(BaseModel):
     surname: str
 
 app.counter: int = 1
-app.storage: Dict[int, Patient] = {}
+app.storage: Dict[int, dict] = {}
     
 item = {"message": "Hello world!"}
 
@@ -69,14 +69,10 @@ def auth(password="", password_hash=""):
 def register_patient(patient: Patient):
     result = {"id": app.counter, "name": patient.name, "surname": patient.surname, "register_date": str(date.today()),
               "vaccination_date": str(date.today() + timedelta(len(''.join(filter(str.isalpha, patient.name))) + len(''.join(filter(str.isalpha, patient.surname)))))}
-    app.storage[app.counter] = patient
+    app.storage[app.counter] = result
     app.counter += 1
     return result
     
     
-@app.get("/patient/{id}")
-def show_patient(id: int):
-    if id in app.storage:
-        return app.storage.get(id)
-    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
     
