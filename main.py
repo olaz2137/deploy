@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request, Response, status
 from pydantic import BaseModel
 import hashlib
+from fastapi.encoders import jsonable_encoder
 
 app = FastAPI()
 app.counter = 0
@@ -8,6 +9,10 @@ app.counter = 0
 
 class HelloResp(BaseModel):
     msg: str
+        
+class Patient(BaseModel):
+    name: str
+    surname: str
 
 item = {"message": "Hello world!"}
 
@@ -29,6 +34,10 @@ def hello_name_view(name: str):
 @app.get("/method")
 def get():
     return {"method": "GET"}
+
+@app.post("/register")
+def register_patient(patient:Patient):
+    
 
 @app.post("/method",status_code=201)
 def post():
