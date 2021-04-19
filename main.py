@@ -15,7 +15,7 @@ class Patient(BaseModel):
     name: str
     surname: str
 
-app.counter = 0
+app.counter: int = 0
 app.storage: Dict[int, Patient] = {}
     
 item = {"message": "Hello world!"}
