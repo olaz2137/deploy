@@ -2,8 +2,8 @@ from fastapi import FastAPI, Request, Response, status
 from pydantic import BaseModel
 import hashlib
 from fastapi.encoders import jsonable_encoder
-from datetime import datetime, time, timedelta
-from typing import Optional
+from datetime import datetime, time, timedelta, date
+
 
 app = FastAPI()
 
@@ -15,7 +15,7 @@ class Patient(BaseModel):
     surname: str
 
 app.counter = 0
-app.storage: Dict[int, Patient,datetime.date,datetime.date] = {}
+app.storage: Dict[int, Patient,str,str] = {}
     
 item = {"message": "Hello world!"}
 
@@ -66,7 +66,7 @@ def auth(password="", password_hash=""):
 
 @app.post("/register",status_code=201)
 def register_patient(patient:Patient):
-    result = {"id": app.counter, patient, "register_date" : date.today().date, "vaccination_date" : date.today().date + timedelta(len(patient.name)+len(patient.surname))}
+    result = {"id": app.counter, patient, "register_date" : str(date.today()), "vaccination_date" : str(date.today() + timedelta(len(patient.name)+len(patient.surname)))}
     app.storage[app.counter] = patient
     app.counter += 1
     return result
