@@ -3,6 +3,7 @@ from pydantic import BaseModel
 import hashlib
 from fastapi.encoders import jsonable_encoder
 from datetime import datetime, time, timedelta, date
+from typing import Dict
 
 
 app = FastAPI()
