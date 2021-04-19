@@ -74,5 +74,9 @@ def register_patient(patient: Patient):
     return result
     
     
-
+@app.get("/patient/{id}")
+def show_patient(id: int):
+    if id in app.storage:
+        return app.storage.get(id)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
     
