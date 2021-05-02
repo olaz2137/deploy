@@ -4,6 +4,8 @@ import hashlib
 from fastapi.encoders import jsonable_encoder
 from datetime import datetime, time, timedelta, date
 from typing import Dict
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 
 
 app = FastAPI()
@@ -31,9 +33,9 @@ def root():
 #    return app.counter
 
 
-@app.get("/hello/{name}", response_model=HelloResp)
-def hello_name_view(name: str):
-    return HelloResp(msg=f"Hello {name}")
+#@app.get("/hello/{name}", response_model=HelloResp)
+#def hello_name_view(name: str):
+#    return HelloResp(msg=f"Hello {name}")
 
 @app.get("/method")
 def get():
@@ -81,4 +83,10 @@ def show_patient(id: int):
         return app.storage.get(id)
     return Response(status_code=status.HTTP_404_NOT_FOUND)    
 
+@app.get("/hello")
+def read_item(request: Request):
+    return templates.TemplateResponse(
+        "index.html.j2",
+        {"request": request, "today_date": str(date.today())},
+    )
     
