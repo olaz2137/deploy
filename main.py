@@ -124,7 +124,7 @@ def read_item(request: Request):
 def login_session(response: Response, username: str = Depends(get_current_username), password: str = Depends(get_current_password)):
     
     app.session_token = sha256(f"{user}{password}{app.secret_key}".encode()).hexdigest()
-    response.set_cookie(key="session_token", value=app.session_token)
+    response.cookies(key="session_token", value=app.session_token)
     return response
 
 
