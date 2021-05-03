@@ -132,6 +132,6 @@ def login_session(response: Response, username: str = Depends(get_current_userna
 def login_token(response: Response, username: str = Depends(get_current_username), password: str = Depends(get_current_password)):
     
     app.token_value = sha256(f"{user}{password}{app.secret_key}".encode()).hexdigest()
-    return {"token": token_value}
+    return {"token": app.token_value}
 
     
