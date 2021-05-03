@@ -199,7 +199,7 @@ def logout_session(*, response: Response, session_token: str = Cookie(None), for
             headers={"WWW-Authenticate": "Basic"},
         )
     del app.session_token
-    return RedirectResponse(url="/logged_out/", status_code=HTTP_302_FOUND)
+    return RedirectResponse(url="/logged_out/format={format}", status_code=HTTP_302_FOUND)
 
 @app.delete("/logout_token/")
 def logout_token(*,response: Response, token: str = Query(None), format: str = Query(None)):
@@ -210,7 +210,7 @@ def logout_token(*,response: Response, token: str = Query(None), format: str = Q
             headers={"WWW-Authenticate": "Basic"},
         )
     del app.token_value
-    return RedirectResponse(url="/logged_out/", status_code=HTTP_302_FOUND)
+    return RedirectResponse(url="/logged_out/format={format}", status_code=HTTP_302_FOUND)
 
 @app.get("/logged_out/")
 def logged_out(*,response: Response, format: str = Query(None)):
