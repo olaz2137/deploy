@@ -129,8 +129,9 @@ def login_session(response: Response, username: str = Depends(get_current_userna
 
 
 @app.post("/login_token/", status_code=201)
-def login_token(*, response: Response, token_value: str = Depends(login_session)):
-    app.token_value = token_value
+def login_token(response: Response, username: str = Depends(get_current_username), password: str = Depends(get_current_password)):
+    
+    app.token_value = sha256(f"{user}{password}{app.secret_key}".encode()).hexdigest()
     return {"token": token_value}
 
     
