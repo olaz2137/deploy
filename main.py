@@ -141,7 +141,7 @@ def login_token(response: Response, username: str = Depends(get_current_username
     return {"token": app.token_value}
     
 @app.get("/welcome_session/")
-def welcome_session(*, response: Response, session_token: str = Cookie(None), format: str = Query(None):
+def welcome_session(*, response: Response, session_token: str = Cookie(None), format: str = Query(None)):
     if session_token != app.session_token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
