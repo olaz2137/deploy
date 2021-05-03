@@ -190,7 +190,7 @@ def welcome_token(*,response: Response, token: str = Query(None), format: str = 
     else:
         return PlainTextResponse("Welcome!")
     
-    @app.delete("/logout_session/")
+@app.delete("/logout_session/")
 def logout_session(*, response: Response, session_token: str = Cookie(None), format: str = Query(None)):
     if session_token != app.session_token:
         raise HTTPException(
