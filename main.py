@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, Response, status
+from fastapi import Cookie, FastAPI, HTTPException, Query, Request, Response, Depends, status
 from pydantic import BaseModel
 import hashlib
 from fastapi.encoders import jsonable_encoder
@@ -6,10 +6,39 @@ from datetime import datetime, time, timedelta, date
 from typing import Dict
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
+from hashlib import sha256
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+import secrets
 
 
 app = FastAPI()
+security = HTTPBasic()
+app.secret_key = "eoirijv30bkr0ek0k-0wa0ELV-WV"
+app.session_token = sha256("4dm1nNotSoSecurePa$$".encode()).hexdigest()
+app.token_value = sha256("4dm1nNotSoSecurePa$$".encode()).hexdigest()
 templates = Jinja2Templates(directory="templates")
+
+def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
+    correct_username = secrets.compare_digest(credentials.username, "4dm1n")
+    correct_password = secrets.compare_digest(credentials.password, "NotSoSecurePa$$")
+    if not (correct_username and correct_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+    return credentials.username
+
+def get_current_password(credentials: HTTPBasicCredentials = Depends(security)):
+    correct_username = secrets.compare_digest(credentials.username, "4dm1n")
+    correct_password = secrets.compare_digest(credentials.password, "NotSoSecurePa$$")
+    if not (correct_username and correct_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+    return credentials.password
 
 class HelloResp(BaseModel):
     msg: str
@@ -90,4 +119,18 @@ def read_item(request: Request):
         "index.html.j2",
         {"request": request, "today_date": str(date.today())},
     )
+
+@app.post("/login_session/", status_code=201)
+def login_session(response: Response, username: str = Depends(get_current_username), password: str = Depends(get_current_password)):
+    
+    app.session_token = sha256(f"{user}{password}{app.secret_key}".encode()).hexdigest()
+    response.set_cookie(key="session_token", value=app.session_token)
+    return response
+
+
+@app.post("/login_token/", status_code=201)
+def login_token(*, response: Response, token_value: str = Depends(login_session)):
+    app.token_value = token_value
+    return {"token": token_value}
+
     
