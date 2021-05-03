@@ -143,7 +143,7 @@ def login_token(response: Response, username: str = Depends(get_current_username
 @app.get("/welcome_session/")
 def welcome_session(*, response: Response, session_token: str = Cookie(None), format: str = Query(None)):
     if session_token != app.session_token:
-        return HTTPException(
+        raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Basic"},
@@ -165,10 +165,10 @@ def welcome_session(*, response: Response, session_token: str = Cookie(None), fo
         return PlainTextResponse("Welcome!")
 
 
-@app.get("/welcome_token")
+@app.get("/welcome_token/")
 def welcome_token(*,response: Response, token: str = Query(None), format: str = Query(None)):
     if token != app.session_token:
-        return HTTPException(
+        raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Basic"},
