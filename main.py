@@ -135,3 +135,51 @@ def login_token(response: Response, username: str = Depends(get_current_username
     app.token_value = sha256(f"{username}{password}{app.secret_key}".encode()).hexdigest()
     return {"token": app.token_value}
     
+@app.get("/welcome_session")
+def welcome_session(session_token: str = Cookie(None),format: str = Query(None)):
+    if session_token != app.session_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+    if format == "json":
+        return {"message": "Welcome!"}
+    elif format == "html":
+        return """
+    <html>
+        <head>
+            <title>Some HTML in here</title>
+        </head>
+        <body>
+            <h1>Welcome!</h1>
+        </body>
+    </html>
+    """
+    else:
+        return "Welcome!"
+
+
+@app.get("/welcome_token")
+def welcome_token(token: str = Query(None), format: str = Query(None)):
+    if token != app.session_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+    if format == "json":
+        return {"message": "Welcome!"}
+    elif format == "html":
+        return """
+    <html>
+        <head>
+            <title>Some HTML in here</title>
+        </head>
+        <body>
+            <h1>Welcome!</h1>
+        </body>
+    </html>
+    """
+    else:
+        return "Welcome!"
