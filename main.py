@@ -10,6 +10,7 @@ from hashlib import sha256
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 import secrets
 from fastapi.responses import PlainTextResponse
+from starlette.responses import RedirectResponse
 
 
 app = FastAPI()
@@ -188,3 +189,43 @@ def welcome_token(*,response: Response, token: str = Query(None), format: str = 
     """)
     else:
         return PlainTextResponse("Welcome!")
+    
+    @app.delete("/logout_session/")
+def logout_session(*, response: Response, session_token: str = Cookie(None), format: str = Query(None)):
+    if session_token != app.session_token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+    del app.session_token
+    return RedirectResponse(url="/logged_out/", status_code=HTTP_302_FOUND)
+
+@app.delete("/logout_token/")
+def logout_token(*,response: Response, token: str = Query(None), format: str = Query(None)):
+    if token != app.token_value:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+    del app.token_value
+    return RedirectResponse(url="/logged_out/", status_code=HTTP_302_FOUND)
+
+@app.get("/logged_out/")
+def logged_out(*,response: Response, format: str = Query(None)):
+    if format == "json":
+        return {"message": "Logged out!"}
+    elif format == "html":
+        return HTMLResponse("""
+    <html>
+        <head>
+            <title>Some HTML in here</title>
+        </head>
+        <body>
+            <h1>Logged out!</h1>
+        </body>
+    </html>
+    """)
+    else:
+        return PlainTextResponse("Logged out!")
