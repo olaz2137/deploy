@@ -53,6 +53,10 @@ app.storage: Dict[int, dict] = {}
     
 item = {"message": "Hello world!"}
 
+@app.get("/morenka/{name}")
+def morenka(name: str):
+    return PlainTextResponse(f"No to chodź {name}, zapraszam na morenkę")
+
 @app.get("/")
 def root():
     return {"message": "Hello world!"}
