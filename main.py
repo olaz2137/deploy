@@ -167,7 +167,7 @@ def welcome_session(*, response: Response, session_token: str = Cookie(None), fo
 
 @app.get("/welcome_token/")
 def welcome_token(*,response: Response, token: str = Query(None), format: str = Query(None)):
-    if token != app.session_token:
+    if token != app.token_value:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
