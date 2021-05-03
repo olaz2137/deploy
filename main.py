@@ -151,7 +151,7 @@ def welcome_session(*, response: Response, session_token: str = Cookie(None), fo
     if format == "json":
         return {"message": "Welcome!"}
     elif format == "html":
-        return """
+        return HTMLResponse("""
     <html>
         <head>
             <title>Some HTML in here</title>
@@ -160,7 +160,7 @@ def welcome_session(*, response: Response, session_token: str = Cookie(None), fo
             <h1>Welcome!</h1>
         </body>
     </html>
-    """
+    """)
     else:
         return PlainTextResponse("Welcome!")
 
@@ -176,7 +176,7 @@ def welcome_token(*,response: Response, token: str = Query(None), format: str = 
     if format == "json":
         return {"message": "Welcome!"}
     elif format == "html":
-        return """
+        return HTMLResponse("""
     <html>
         <head>
             <title>Some HTML in here</title>
@@ -185,6 +185,6 @@ def welcome_token(*,response: Response, token: str = Query(None), format: str = 
             <h1>Welcome!</h1>
         </body>
     </html>
-    """
+    """)
     else:
         return PlainTextResponse("Welcome!")
