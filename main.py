@@ -9,6 +9,7 @@ from fastapi.templating import Jinja2Templates
 from hashlib import sha256
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 import secrets
+from fastapi.responses import PlainTextResponse
 
 
 app = FastAPI()
@@ -135,7 +136,7 @@ def login_token(response: Response, username: str = Depends(get_current_username
     app.token_value = sha256(f"{username}{password}{app.secret_key}".encode()).hexdigest()
     return {"token": app.token_value}
     
-@app.get("/welcome_session")
+@app.get("/welcome_session", response_class=PlainTextResponse)
 def welcome_session(session_token: str = Cookie(None),format: str = Query(None)):
     if session_token != app.session_token:
         raise HTTPException(
@@ -160,7 +161,7 @@ def welcome_session(session_token: str = Cookie(None),format: str = Query(None))
         return '"Welcome!"'
 
 
-@app.get("/welcome_token")
+@app.get("/welcome_token", response_class=PlainTextResponse)
 def welcome_token(token: str = Query(None), format: str = Query(None)):
     if token != app.session_token:
         raise HTTPException(
