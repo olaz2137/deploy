@@ -123,15 +123,15 @@ def read_item(request: Request):
 @app.post("/login_session/", status_code=201)
 def login_session(response: Response, username: str = Depends(get_current_username), password: str = Depends(get_current_password)):
     
-    app.session_token = sha256(f"{user}{password}{app.secret_key}".encode()).hexdigest()
-    response.cookies(key="session_token", value=app.session_token)
-    return response
+    session_token = sha256(f"{username}{password}{app.secret_key}".encode()).hexdigest()
+    app.session_token = session_token
+    response.set_cookie("session_token",session_token)
+    #return response
 
 
 @app.post("/login_token/", status_code=201)
 def login_token(response: Response, username: str = Depends(get_current_username), password: str = Depends(get_current_password)):
-    
-    app.token_value = sha256(f"{user}{password}{app.secret_key}".encode()).hexdigest()
-    return {"token": app.token_value}
 
+    app.token_value = sha256(f"{username}{password}{app.secret_key}".encode()).hexdigest()
+    return {"token": app.token_value}
     
