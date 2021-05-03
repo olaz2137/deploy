@@ -157,7 +157,7 @@ def welcome_session(session_token: str = Cookie(None),format: str = Query(None))
     </html>
     """
     else:
-        return "Welcome!"
+        return '"Welcome!"'
 
 
 @app.get("/welcome_token")
@@ -182,4 +182,4 @@ def welcome_token(token: str = Query(None), format: str = Query(None)):
     </html>
     """
     else:
-        return "Welcome!"
+        return '"Welcome!"'
