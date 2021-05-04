@@ -190,7 +190,7 @@ def welcome_token(*,response: Response, token: str = Query(None), format: str = 
  
 
 @app.delete("/logout_session/")
-async def logout_session(*, response: Response, session_token: str = Cookie(None), format: str = Query(None)):
+async def logout_session(*, response: Response, session_token: str = Cookie(None), format: str = Query("")):
     if session_token != app.session_token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -201,7 +201,7 @@ async def logout_session(*, response: Response, session_token: str = Cookie(None
     return RedirectResponse(url=f"/logged_out?format={format}",status_code=303)
 
 @app.delete("/logout_token/")
-async def logout_token(*,response: Response, token: str = Query(None), format: str = Query(None)):
+async def logout_token(*,response: Response, token: str = Query(None), format: str = Query("")):
     if token != app.token_value:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
