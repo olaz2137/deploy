@@ -204,7 +204,7 @@ def logout_session(session_token: str = Cookie(None), format: str = ""):
     if session_token in app.session_token:
         app.session_token.remove(session_token)
     else:
-        app.token_value(session_token)
+        app.token_value.remove(session_token)
     return RedirectResponse(url=f"/logged_out?format={format}",status_code=302)
 
 @app.delete("/logout_token")
@@ -218,7 +218,7 @@ def logout_token(token: str, format: str = ""):
     if token in app.session_token:
         app.session_token.remove(token)
     else:
-        app.token_value(token)
+        app.token_value.remove(token)
     return RedirectResponse(url=f"/logged_out?format={format}", status_code=302)
 
 @app.get("/logged_out")
