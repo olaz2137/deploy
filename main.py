@@ -4,13 +4,11 @@ import hashlib
 from fastapi.encoders import jsonable_encoder
 from datetime import datetime, time, timedelta, date
 from typing import Dict
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, PlainTextResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from hashlib import sha256
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 import secrets
-from fastapi.responses import PlainTextResponse
-from starlette.responses import RedirectResponse
 
 
 app = FastAPI()
@@ -215,7 +213,7 @@ async def logout_token(token: str, format: str = ""):
     return RedirectResponse(url=f"/logged_out?format={format}", status_code=303)
 
 @app.get("/logged_out")
-def logged_out(format:str = ""):
+def logged_out(format: str = ""):
     if format == "json":
         return {"message": "Logged out!"}
     elif format == "html":
