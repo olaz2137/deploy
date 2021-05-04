@@ -199,7 +199,7 @@ async def logout_session(*, response: Response, session_token: str = Cookie(None
             headers={"WWW-Authenticate": "Basic"},
         )
     del app.session_token
-    response = RedirectResponse(url="/logged_out/{format}",status_code=303)
+    response = RedirectResponse(url=f"/patient/{format}",status_code=303)
     return response
 
 @app.delete("/logout_token/")
@@ -211,7 +211,7 @@ async def logout_token(*,response: Response, token: str = Query(None), format: s
             headers={"WWW-Authenticate": "Basic"},
         )
     del app.token_value
-    return RedirectResponse(url="/logged_out/{format}", status_code=303)
+    return RedirectResponse(url=f"/patient/{format}", status_code=303)
 
 @app.get("/logged_out/{format}")
 def logged_out(format:str):
