@@ -189,9 +189,9 @@ def welcome_token(*,response: Response, token: str = Query(None), format: str = 
         return PlainTextResponse("Welcome!")
  
 
-@app.delete("/logout_session/")
-async def logout_session(*, response: Response, session_token: str = Cookie(None), format: str = Query("")):
-    if session_token != app.session_token:
+@app.delete("/logout_session")
+def logout_session(session_token: str = Cookie(None), format: str = ""):
+    if (session_token != app.session_token and session_token != app.token_value) or session_token == "":
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
@@ -200,9 +200,9 @@ async def logout_session(*, response: Response, session_token: str = Cookie(None
     del app.session_token
     return RedirectResponse(url=f"/logged_out?format={format}",status_code=303)
 
-@app.delete("/logout_token/")
-async def logout_token(*,response: Response, token: str = Query(None), format: str = Query("")):
-    if token != app.token_value:
+@app.delete("/logout_token")
+def logout_token(token: str = "", format: str = ""):
+    if (token != app.token_value and token != app.session_token) or token == "":
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
@@ -211,8 +211,8 @@ async def logout_token(*,response: Response, token: str = Query(None), format: s
     del app.token_value
     return RedirectResponse(url=f"/logged_out?format={format}", status_code=303)
 
-@app.get("/logged_out/")
-def logged_out(*, response: Response, format:str = Query("")):
+@app.get("/logged_out")
+def logged_out(format:str = ""):
     if format == "json":
         return {"message": "Logged out!"}
     elif format == "html":
