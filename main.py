@@ -141,7 +141,7 @@ def login_token(response: Response, username: str = Depends(get_current_username
     if len(app.token_value) >= 3:
         app.token_value.pop(0)
     app.token_value.append(token_value)
-    return {"token": app.token_value}
+    return {"token": token_value}
 
 @app.get("/welcome_session/")
 def welcome_session(*, response: Response, session_token: str = Cookie(None), format: str = Query(None)):
