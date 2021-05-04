@@ -214,7 +214,7 @@ async def logout_token(*,response: Response, token: str = Query(None), format: s
     return RedirectResponse(url=f"/logged_out/format={format}", status_code=303)
 
 @app.get("/logged_out/")
-def logged_out(format:str = Query(None)):
+def logged_out(*, response: Response, format:str = Query(None)):
     if format == "json":
         return {"message": "Logged out!"}
     elif format == "html":
