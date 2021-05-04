@@ -197,7 +197,7 @@ def logout_session(session_token: str = Cookie(None), format: str = ""):
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Basic"},
         )
-    del app.session_token
+    app.session_token = ""
     return RedirectResponse(url=f"/logged_out?format={format}",status_code=302)
 
 @app.delete("/logout_token")
@@ -208,7 +208,7 @@ def logout_token(token: str, format: str = ""):
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Basic"},
         )
-    del app.token_value
+    app.token_value = ""
     return RedirectResponse(url=f"/logged_out?format={format}", status_code=302)
 
 @app.get("/logged_out")
