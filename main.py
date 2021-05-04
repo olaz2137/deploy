@@ -200,7 +200,7 @@ async def logout_session(*, response: Response, session_token: str = Cookie(None
         )
     del app.session_token
     response = RedirectResponse(url="/logged_out/?format={format}",status_code=303)
-    response.delete_cookie("session_token")
+    #response.delete_cookie("session_token")
     return response
 
 @app.delete("/logout_token/")
