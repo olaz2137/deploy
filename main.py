@@ -195,24 +195,30 @@ def welcome_token(*,response: Response, token: str = Query(None), format: str = 
 
 @app.delete("/logout_session")
 def logout_session(session_token: str = Cookie(None), format: str = ""):
-    if (session_token not in app.session_token):
+    if (session_token not in app.session_token and session_token not in app.token_value):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Basic"},
         )
-    app.session_token.remove(session_token)
+    if session_token in app.session_token:
+        app.session_token.remove(session_token)
+    else:
+        app.token_value(session_token)
     return RedirectResponse(url=f"/logged_out?format={format}",status_code=302)
 
 @app.delete("/logout_token")
 def logout_token(token: str, format: str = ""):
-    if (token not in app.token_value) or token == "":
+    if (token not in app.token_value and token not in app.session_token) or token == "":
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Basic"},
         )
-    app.token_value.remove(token)
+    if token in app.session_token:
+        app.session_token.remove(token)
+    else:
+        app.token_value(token)
     return RedirectResponse(url=f"/logged_out?format={format}", status_code=302)
 
 @app.get("/logged_out")
