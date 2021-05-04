@@ -14,8 +14,8 @@ import secrets
 app = FastAPI()
 security = HTTPBasic()
 app.secret_key = "eoirijv30bkr0ek0k-0wa0ELV-WV"
-app.session_token = sha256("4dm1nNotSoSecurePa$$".encode()).hexdigest()
-app.token_value = sha256("4dm1nNotSoSecurePa$$".encode()).hexdigest()
+app.session_token = []
+app.token_value = []
 templates = Jinja2Templates(directory="templates")
 
 def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
@@ -128,20 +128,24 @@ def read_item(request: Request):
 def login_session(response: Response, username: str = Depends(get_current_username), password: str = Depends(get_current_password)):
     
     session_token = sha256(f"{username}{password}{app.secret_key}".encode()).hexdigest()
-    app.session_token = session_token
     response.set_cookie("session_token",session_token)
-    #return response
+    if len(app.session_token) >= 3:
+        app.session_token.pop(0)
+    app.session_token.append(session_token)
 
 
 @app.post("/login_token/", status_code=201)
 def login_token(response: Response, username: str = Depends(get_current_username), password: str = Depends(get_current_password)):
 
-    app.token_value = sha256(f"{username}{password}{app.secret_key}".encode()).hexdigest()
+    token_value = sha256(f"{username}{password}{app.secret_key}".encode()).hexdigest()
+    if len(app.token_value) >= 3:
+        app.token_value.pop(0)
+    app.token_value.append(token_value)
     return {"token": app.token_value}
-    
+
 @app.get("/welcome_session/")
 def welcome_session(*, response: Response, session_token: str = Cookie(None), format: str = Query(None)):
-    if session_token != app.session_token:
+    if session_token not in app.session_token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
@@ -166,7 +170,7 @@ def welcome_session(*, response: Response, session_token: str = Cookie(None), fo
 
 @app.get("/welcome_token/")
 def welcome_token(*,response: Response, token: str = Query(None), format: str = Query(None)):
-    if token != app.token_value:
+    if token not in app.token_value:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
@@ -191,24 +195,24 @@ def welcome_token(*,response: Response, token: str = Query(None), format: str = 
 
 @app.delete("/logout_session")
 def logout_session(session_token: str = Cookie(None), format: str = ""):
-    if (session_token != app.session_token and session_token != app.token_value):
+    if (session_token not in app.session_token and session_token not in app.token_value):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Basic"},
         )
-    app.session_token = ""
+    app.session_token.remove(session_token)
     return RedirectResponse(url=f"/logged_out?format={format}",status_code=302)
 
 @app.delete("/logout_token")
 def logout_token(token: str, format: str = ""):
-    if (token != app.token_value and token != app.session_token) or token == "":
+    if (token not in app.token_value and token not in app.session_token) or token == "":
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Basic"},
         )
-    app.token_value = ""
+    app.token_value.remove(token)
     return RedirectResponse(url=f"/logged_out?format={format}", status_code=302)
 
 @app.get("/logged_out")
