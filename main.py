@@ -190,7 +190,7 @@ def welcome_token(*,response: Response, token: str = Query(None), format: str = 
  
 
 @app.delete("/logout_session")
-def logout_session(*,session_token: str = Cookie(None), format: str = ""):
+def logout_session(session_token: str = Cookie(None), format: str = ""):
     if (session_token != app.session_token and session_token != app.token_value) or session_token == "":
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -198,10 +198,10 @@ def logout_session(*,session_token: str = Cookie(None), format: str = ""):
             headers={"WWW-Authenticate": "Basic"},
         )
     del app.session_token
-    return RedirectResponse(url=f"/logged_out?format={format}",status_code=303)
+    return RedirectResponse(url=f"/logged_out?format={format}",status_code=302)
 
 @app.delete("/logout_token")
-def logout_token(*,token: str = "", format: str = ""):
+def logout_token(token: str, format: str = ""):
     if (token != app.token_value and token != app.session_token) or token == "":
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -209,7 +209,7 @@ def logout_token(*,token: str = "", format: str = ""):
             headers={"WWW-Authenticate": "Basic"},
         )
     del app.token_value
-    return RedirectResponse(url=f"/logged_out?format={format}", status_code=303)
+    return RedirectResponse(url=f"/logged_out?format={format}", status_code=302)
 
 @app.get("/logged_out")
 def logged_out(format:str = ""):
