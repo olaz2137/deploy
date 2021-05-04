@@ -9,6 +9,7 @@ from fastapi.templating import Jinja2Templates
 from hashlib import sha256
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 import secrets
+import random 
 
 
 app = FastAPI()
@@ -127,7 +128,7 @@ def read_item(request: Request):
 @app.post("/login_session/", status_code=201)
 def login_session(response: Response, username: str = Depends(get_current_username), password: str = Depends(get_current_password)):
     
-    session_token = sha256(f"{username}{password}{app.secret_key}".encode()).hexdigest()
+    session_token = sha256(f"{username}{password}{str(random.randint(0,2021))}".encode()).hexdigest()
     response.set_cookie("session_token",session_token)
     if len(app.session_token) >= 3:
         app.session_token.pop(0)
@@ -137,7 +138,7 @@ def login_session(response: Response, username: str = Depends(get_current_userna
 @app.post("/login_token/", status_code=201)
 def login_token(response: Response, username: str = Depends(get_current_username), password: str = Depends(get_current_password)):
 
-    token_value = sha256(f"{username}{password}{app.secret_key}".encode()).hexdigest()
+    token_value = sha256(f"{username}{password}{str(random.randint(0,2021))}".encode()).hexdigest()
     if len(app.token_value) >= 3:
         app.token_value.pop(0)
     app.token_value.append(token_value)
