@@ -191,7 +191,7 @@ def welcome_token(*,response: Response, token: str = Query(None), format: str = 
         return PlainTextResponse("Welcome!")
     
 @app.delete("/logout_session/")
-async def logout_session(response: Response, session_token: str = Cookie(None), format: str = Query(None)):
+async def logout_session(*, response: Response, session_token: str = Cookie(None), format: str = Query(None)):
     if session_token != app.session_token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -199,12 +199,11 @@ async def logout_session(response: Response, session_token: str = Cookie(None), 
             headers={"WWW-Authenticate": "Basic"},
         )
     del app.session_token
-    response = RedirectResponse(url="/logged_out/?format={format}",status_code=303)
-    #response.delete_cookie("session_token")
+    response = RedirectResponse(url="/logged_out/{format}",status_code=303)
     return response
 
 @app.delete("/logout_token/")
-async def logout_token(response: Response, token: str = Query(None), format: str = Query(None)):
+async def logout_token(*,response: Response, token: str = Query(None), format: str = Query(None)):
     if token != app.token_value:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -212,10 +211,10 @@ async def logout_token(response: Response, token: str = Query(None), format: str
             headers={"WWW-Authenticate": "Basic"},
         )
     del app.token_value
-    return RedirectResponse(url="/logged_out?format={format}", status_code=303)
+    return RedirectResponse(url="/logged_out/{format}", status_code=303)
 
-@app.get("/logged_out/")
-def logged_out(response: Response, format: str = Query(None)):
+@app.get("/logged_out/{format}")
+def logged_out(format:str):
     if format == "json":
         return {"message": "Logged out!"}
     elif format == "html":
