@@ -189,7 +189,8 @@ def welcome_token(*,response: Response, token: str = Query(None), format: str = 
     """)
     else:
         return PlainTextResponse("Welcome!")
-    
+ 
+@app.get("/logout_session/")
 @app.delete("/logout_session/")
 async def logout_session(*,response: Response,session_token: str = Cookie(None), format: str = Query(None)):
     if session_token != app.session_token:
@@ -201,6 +202,7 @@ async def logout_session(*,response: Response,session_token: str = Cookie(None),
     del app.session_token
     return RedirectResponse(url=f"/logged_out/?format={format}",status_code=303)
 
+@app.get("/logout_token/")
 @app.delete("/logout_token/")
 async def logout_token(*,response: Response, token: str = Query(None), format: str = Query(None)):
     if token != app.token_value:
