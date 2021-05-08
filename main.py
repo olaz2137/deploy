@@ -240,13 +240,4 @@ def logged_out(format:str = ""):
     else:
         return PlainTextResponse("Logged out!")
     
-#pd 4
-import aiosqlite
 
-@app.get("/categories")
-async def categories():
-    cursor = app.db_connection.cursor()
-    categories = cursor.execute("SELECT CategoryID, CategoryName FROM Categories").fetchall()
-    return {
-        "categories" : categories,
-    }
